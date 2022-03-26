@@ -8,13 +8,12 @@ import requests
 from flask import current_app as app
 from flask_babel import gettext, format_datetime, format_number
 
-from db_tools import (
+from ETL import (
     nat_data_coll, reg_data_coll, prov_data_coll, nat_trends_coll,
     reg_trends_coll, prov_trends_coll, reg_bdown_coll, prov_bdown_coll,
     nat_series_coll, reg_series_coll, prov_series_coll,
     vax_admins_summary_coll, vax_admins_coll, pop_coll
 )
-from utils import rubbish_notes, translate_series_lang
 from settings import (
     ITALY_MAP, VERSION, REGIONS, PROVINCES, KEY_PERIODS, PC_TO_OD_MAP,
     OD_TO_PC_MAP, DOW_FMTY, SERIES_DT_FMT
@@ -28,6 +27,8 @@ from settings.vars import (
     POP_KEY, VAX_PROVIDER_KEY, OD_POP_KEY,
     VAX_BOOSTER_DOSE_KEY
 )
+from utils import rubbish_notes, translate_series_lang
+
 pd.options.mode.chained_assignment = None
 
 DATA_SERIES = [VARS[key]["title"] for key in VARS]

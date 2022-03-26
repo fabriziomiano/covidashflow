@@ -2,66 +2,16 @@
 Settings Module
 """
 import datetime as dt
-from collections import OrderedDict
-
-from flask_babel import gettext
 
 VERSION = "5.12"
-PAGE_BASE_TITLE = gettext("COVIDash.it")
 LOCKDOWN_DAY = dt.datetime(2020, 3, 22)
 PHASE2_DAY = dt.datetime(2020, 5, 4)
 PHASE3_DAY = dt.datetime(2020, 6, 15)
 CRITICAL_AREAS_DAY = dt.datetime(2020, 11, 6)
 VACCINE_DAY = dt.datetime(2020, 12, 27)
-KEY_PERIODS = OrderedDict()
 SERIES_DT_FMT = "d MMM yy"
 DOW_FMTY = 'EEE d MMM'
 
-KEY_PERIODS["lockdown"] = {
-    "title": gettext("Lockdown"),
-    "text": gettext('Lockdown'),
-    "color": "red",
-    "from": LOCKDOWN_DAY,
-    "to": PHASE2_DAY,
-    "n_days": (PHASE2_DAY - LOCKDOWN_DAY).days
-}
-KEY_PERIODS["phase2"] = {
-    "title": gettext("Phase 2"),
-    "text": gettext('"Phase 2"'),
-    "color": "orange",
-    "from": PHASE2_DAY,
-    "to": PHASE3_DAY,
-    "n_days": (PHASE3_DAY - PHASE2_DAY).days,
-}
-KEY_PERIODS["phase3"] = {
-    "title": gettext("Phase 3"),
-    "text": gettext('"Phase 3"'),
-    "color": "green",
-    "from": PHASE3_DAY,
-    "to": CRITICAL_AREAS_DAY,
-    "n_days": (CRITICAL_AREAS_DAY - PHASE3_DAY).days,
-}
-KEY_PERIODS["critical_areas"] = {
-    "title": gettext("Critical Areas"),
-    "text": gettext('Critical areas'),
-    "color": "red",
-    "from": CRITICAL_AREAS_DAY,
-    "to": dt.datetime.today(),
-    "n_days": (dt.datetime.today() - CRITICAL_AREAS_DAY).days
-}
-KEY_PERIODS["vaccine_day"] = {
-    "title": gettext("Vaccine day"),
-    "text": gettext('Vaccine day'),
-    "color": "blue",
-    "from": VACCINE_DAY,
-    "to": dt.datetime.today(),
-    "n_days": (dt.datetime.today() - VACCINE_DAY).days
-}
-
-LANGUAGES = {
-    "en": "English",
-    "it_IT": "Italiano"
-}
 ITALY_MAP = {
     'Abruzzo': ['Chieti', "L'Aquila", 'Pescara', 'Teramo'],
     'Basilicata': ['Matera', 'Potenza'],
@@ -200,12 +150,9 @@ OD_TO_PC_MAP = {
 TRANSLATION_DIRNAME = "translations"
 DEFAULT_DAG_ARGS = {
     'owner': 'COVIDash',
-    'depends_on_past': False,
+    'depends_on_past': True,
     'start_date': dt.datetime(2022, 3, 21),
     'email': ['fabriziomiano@gmail.com'],
     'email_on_failure': True,
-    # 'email_on_retry': True,
-    # 'retries': 1,
-    # 'retry_delay': dt.timedelta(minutes=0, seconds=30),
-    'schedule_interval': '0 0/2 * 1/1 * ? *',
+    'schedule_interval': '*5 * * * *'
 }

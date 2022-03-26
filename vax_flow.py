@@ -1,10 +1,10 @@
 import pandas as pd
 from airflow.decorators import dag, task
 
-from db_tools import (
+from ETL import (
     vax_admins_coll, vax_admins_summary_coll, pop_coll
 )
-from db_tools.etl import (
+from ETL.etl import (
     preprocess_vax_admins_df, preprocess_vax_admins_summary_df
 )
 from settings import DEFAULT_DAG_ARGS

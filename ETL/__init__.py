@@ -3,11 +3,8 @@ DB-Utils module
 """
 import os
 
-# client = MongoClient(os.environ[os.environ["AIRFLOW_VAR_MONGO_URI"]])
-# db = client['covidashflow']
 from airflow.providers.mongo.hooks.mongo import MongoHook
 
-# from pymongo import MongoClient
 mongo = MongoHook()
 
 nat_data_coll = mongo.get_collection(os.environ["AIRFLOW_VAR_NATIONAL_DATA_COLLECTION"])
