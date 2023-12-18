@@ -2,18 +2,32 @@
 *.pyc
 __pycache__
 
-# virtual env
-.venv/*
-
 # ide stuff
 .idea
 .vscode
 
-# node modules
-node_modules/
+# Ignore compiled Python files
+*.pyc
+__pycache__/
+
+# Ignore local settings files
+.env
+
+# Ignore log files
+logs/
 
 # log files
 *.log
 
-# env vars
-.env
+# Ignore Airflow database and metadata
+airflow/airflow.db
+airflow/airflow-webserver.pid
+airflow/airflow-scheduler.pid
+airflow/logs/
+airflow/dags/__pycache__/
+airflow/*.err
+airflow/*.out
+webserver_config.py
+
+# Ignore virtual environment directories
+.venv/*
