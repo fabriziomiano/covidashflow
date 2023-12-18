@@ -1,3 +1,19 @@
-__pycache__/
-*env*.*
-.idea/
+# python compiled
+*.pyc
+__pycache__
+
+# virtual env
+.venv/*
+
+# ide stuff
+.idea
+.vscode
+
+# node modules
+node_modules/
+
+# log files
+*.log
+
+# env vars
+.env
