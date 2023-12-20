@@ -3,12 +3,13 @@ OD Collections
 """
 import os
 
-from airflow.providers.mongo.hooks.mongo import MongoHook
+from utils.db import mongo_hook
 
-mongo = MongoHook()
+vax_admins_coll_name = os.environ["AIRFLOW_VAR_VAX_ADMINS_COLLECTION"]
+vax_admins_coll = mongo_hook.get_collection(vax_admins_coll_name)
 
-vax_admins_coll = mongo.get_collection(os.environ["AIRFLOW_VAR_VAX_ADMINS_COLLECTION"])
-vax_admins_summary_coll = mongo.get_collection(
-    os.environ["AIRFLOW_VAR_VAX_ADMINS_SUMMARY_COLLECTION"]
-)
-pop_coll = mongo.get_collection(os.environ["AIRFLOW_VAR_POP_COLLECTION"])
+vax_admins_summary_coll_name = os.environ["AIRFLOW_VAR_VAX_ADMINS_SUMMARY_COLLECTION"]
+vax_admins_summary_coll = mongo_hook.get_collection(vax_admins_summary_coll_name)
+
+pop_coll_name = os.environ["AIRFLOW_VAR_POP_COLLECTION"]
+pop_coll = mongo_hook.get_collection(pop_coll_name)

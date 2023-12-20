@@ -3,11 +3,11 @@ from etl.dpc.collections import (
     nat_data_coll,
     nat_series_coll,
     nat_trends_coll,
-    prov_bdown_coll,
+    prov_breakdown_coll,
     prov_data_coll,
     prov_series_coll,
     prov_trends_coll,
-    reg_bdown_coll,
+    reg_breakdown_coll,
     reg_data_coll,
     reg_series_coll,
     reg_trends_coll,
@@ -74,8 +74,8 @@ def pcm_dpc_etl():
     def regional_breakdown_data_etl():
         """Drop and recreate regional breakdown data collection"""
         regional_breakdown = build_regional_breakdown(preprocessed_regional_data_df)
-        reg_bdown_coll.drop()
-        reg_bdown_coll.insert_one(regional_breakdown)
+        reg_breakdown_coll.drop()
+        reg_breakdown_coll.insert_one(regional_breakdown)
 
     @task()
     def regional_series_data_etl():
@@ -104,8 +104,8 @@ def pcm_dpc_etl():
         provincial_breakdowns = build_provincial_breakdowns(
             preprocessed_provincial_data_df
         )
-        prov_bdown_coll.drop()
-        prov_bdown_coll.insert_many(provincial_breakdowns)
+        prov_breakdown_coll.drop()
+        prov_breakdown_coll.insert_many(provincial_breakdowns)
 
     @task()
     def provincial_series_data_etl():

@@ -20,13 +20,13 @@ logs/
 *.log
 
 # Ignore Airflow database and metadata
-airflow/airflow.db
-airflow/airflow-webserver.pid
-airflow/airflow-scheduler.pid
-airflow/logs/
-airflow/dags/__pycache__/
-airflow/*.err
-airflow/*.out
+airflow.*
+airflow-webserver.pid
+airflow-scheduler.pid
+logs/
+dags/__pycache__/
+*.err
+*.out
 webserver_config.py
 
 # Ignore virtual environment directories
