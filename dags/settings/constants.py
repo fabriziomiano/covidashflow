@@ -227,8 +227,8 @@ OD_TO_PC_MAP = {
 DEFAULT_DAG_ARGS = {
     "owner": "COVIDash",
     "depends_on_past": False,
-    "start_date": dt.datetime(2022, 3, 21),
+    "start_date": dt.datetime.combine(dt.datetime.now(), dt.time.min),
     "email": ["fabriziomiano@gmail.com"],
     "email_on_failure": False,
-    "schedule_interval": "*5 * * * *",
+    "schedule_interval": "0 0 */3 * *",
 }

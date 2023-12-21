@@ -31,3 +31,6 @@ webserver_config.py
 
 # Ignore virtual environment directories
 .venv/*
+
+# ignore .env.* files
+.env*
