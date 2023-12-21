@@ -28,6 +28,7 @@ dags/__pycache__/
 *.err
 *.out
 webserver_config.py
+standalone_admin_password.txt
 
 # Ignore virtual environment directories
 .venv/*
