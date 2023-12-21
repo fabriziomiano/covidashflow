@@ -1,0 +1,33 @@
+# python compiled
+*.pyc
+__pycache__
+
+# ide stuff
+.idea
+.vscode
+
+# Ignore compiled Python files
+*.pyc
+__pycache__/
+
+# Ignore local settings files
+.env
+
+# Ignore log files
+logs/
+
+# log files
+*.log
+
+# Ignore Airflow database and metadata
+airflow.*
+airflow-webserver.pid
+airflow-scheduler.pid
+logs/
+dags/__pycache__/
+*.err
+*.out
+webserver_config.py
+
+# Ignore virtual environment directories
+.venv/*
