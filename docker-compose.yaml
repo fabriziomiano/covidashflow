@@ -59,7 +59,7 @@ x-airflow-common:
     AIRFLOW__CELERY__BROKER_URL: redis://:@redis:6379/0
     AIRFLOW__CORE__FERNET_KEY: ''
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION: 'true'
-    AIRFLOW__CORE__LOAD_EXAMPLES: 'false'
+    AIRFLOW__CORE__LOAD_EXAMPLES: 'true'
     AIRFLOW__API__AUTH_BACKENDS: 'airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session'
     # yamllint disable rule:line-length
     # Use simple http server on scheduler for health checks
@@ -68,10 +68,12 @@ x-airflow-common:
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK: 'true'
     # WARNING: Use _PIP_ADDITIONAL_REQUIREMENTS option ONLY for a quick checks
     # for other purpose (development, test and especially production usage) build/extend Airflow image.
-    _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
+    # _PIP_ADDITIONAL_REQUIREMENTS: ${_PIP_ADDITIONAL_REQUIREMENTS:-}
 
     AIRFLOW_CONN_MONGO_DEFAULT: mongodb+srv://covidash_prod:ZpQqoi71RFf82EGj@clustercovid.ylaj6.azure.mongodb.net/airflow
-    AIRFLOW_VAR_APPLICATION_ENV: development
+    AIRFLOW__CORE__TEST_CONNECTION : Enabled
+
+    # AIRFLOW_VAR_APPLICATION_ENV: production
     AIRFLOW_VAR_NATIONAL_DATA_COLLECTION: National
     AIRFLOW_VAR_NATIONAL_TRENDS_COLLECTION: NationalTrends
     AIRFLOW_VAR_NATIONAL_SERIES_COLLECTION: NationalSeries

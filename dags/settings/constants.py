@@ -224,12 +224,11 @@ OD_TO_PC_MAP = {
     "VDA": "Valle d'Aosta",
     "VEN": "Veneto",
 }
-TRANSLATION_DIRNAME = "translations"
 DEFAULT_DAG_ARGS = {
     "owner": "COVIDash",
-    "depends_on_past": True,
+    "depends_on_past": False,
     "start_date": dt.datetime(2022, 3, 21),
     "email": ["fabriziomiano@gmail.com"],
-    "email_on_failure": True,
+    "email_on_failure": False,
     "schedule_interval": "*5 * * * *",
 }

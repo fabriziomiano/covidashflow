@@ -1,7 +1,4 @@
-
 FROM apache/airflow:2.8.0
-ADD requirements.txt .
-ADD .env .
+COPY requirements.txt /
 RUN pip install --upgrade pip && \
-    pip install apache-airflow==${AIRFLOW_VERSION} && \
-    pip install -r requirements.txt
+    pip install --no-cache-dir "apache-airflow==${AIRFLOW_VERSION}" -r /requirements.txt
