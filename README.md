@@ -7,7 +7,7 @@ A simple Apache Airflow project which works as the ETL of [COVIDash.it](https://
 ## For developers
 To see it in action have a MongoDB instance ready and populate the `.env` file with the appropriate value. Then 
 ```shell
-docker-compose --env-file ./.env --build up
+docker-compose --env-file ./.env up
 ```
 The Airflow Web UI will be listening at `http://0.0.0.0:8080`
 It can be stopped with 
