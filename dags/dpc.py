@@ -31,9 +31,17 @@ from settings.urls import URL_NATIONAL, URL_PROVINCIAL, URL_REGIONAL
 from utils.misc import get_logger
 
 logger = get_logger("DPC-DAG")
+DAG_ID = "pcm-dpc-covid19-etl"
+SCHEDULE_INTERVAL = "@weekly"
 
 
-@dag("DPCPCM_ETL", catchup=False, tags=["COVID"], default_args=DEFAULT_DAG_ARGS)
+@dag(
+    DAG_ID,
+    catchup=False,
+    tags=["italia", "dpc-pcm", "covid"],
+    default_args=DEFAULT_DAG_ARGS,
+    schedule_interval=SCHEDULE_INTERVAL,
+)
 def pcm_dpc_etl():
     """
     DPC-PCM ETL procedure

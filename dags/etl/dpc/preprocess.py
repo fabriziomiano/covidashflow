@@ -2,26 +2,23 @@
 DPC Preprocessing module
 """
 import pandas as pd
-from settings.constants import (
-    DAILY_QUANTITIES,
-    NON_CUM_QUANTITIES,
-    PROV_TREND_CARDS,
-    PROVINCES,
-    REGIONS,
-    TREND_CARDS,
-)
+from settings.constants import PROVINCES, REGIONS
 from settings.vars import (
+    DAILY_QUANTITIES,
     DAILY_SWABS_KEY,
     DATE_KEY,
     NEW_POSITIVE_KEY,
     NEW_POSITIVE_MA_KEY,
+    NON_CUM_QUANTITIES,
     POSITIVITY_INDEX,
+    PROV_TREND_CARDS,
     PROVINCE_CODE,
     PROVINCE_KEY,
     REGION_CODE,
     REGION_KEY,
     STATE_KEY,
     TOTAL_CASES_KEY,
+    TREND_CARDS,
     VARS,
 )
 from utils.misc import get_logger

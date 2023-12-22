@@ -11,10 +11,18 @@ from settings.urls import (
 from settings.vars import VAX_DATE_KEY
 from utils.misc import get_logger
 
-logger = get_logger("OD-ETL")
+logger = get_logger("OD-DAG")
+DAG_ID = "italia-covid19-opendata-etl"
+SCHEDULE_INTERVAL = "@weekly"
 
 
-@dag("OpenData_ETL", catchup=False, tags=["COVID"], default_args=DEFAULT_DAG_ARGS)
+@dag(
+    DAG_ID,
+    catchup=False,
+    tags=["italia", "covid", "vaccines", "opendata"],
+    default_args=DEFAULT_DAG_ARGS,
+    schedule_interval=SCHEDULE_INTERVAL,
+)
 def od_etl():
     """
     Italy Open-Data vaccination ETL procedure

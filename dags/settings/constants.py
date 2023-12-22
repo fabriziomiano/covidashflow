@@ -4,29 +4,7 @@ Settings Module
 import datetime as dt
 from collections import OrderedDict
 
-from .vars import (
-    NEW_POSITIVE_KEY,
-    TOTAL_CASES_KEY,
-    VARS,
-    VAX_BOOSTER_DOSE_KEY,
-    VAX_FIRST_DOSE_KEY,
-    VAX_SECOND_DOSE_KEY,
-)
-
-CUM_QUANTITIES = [q for q in VARS if VARS[q]["type"] == "cum"]
-NON_CUM_QUANTITIES = [q for q in VARS if VARS[q]["type"] == "current"]
-DAILY_QUANTITIES = [
-    quantity
-    for quantity in VARS
-    if VARS[quantity]["type"] == "daily" and quantity.endswith("_ma")
-]
-TREND_CARDS = [
-    quantity
-    for quantity in VARS
-    if not quantity.endswith("_ma") and VARS[quantity]["type"] != "vax"
-]
-PROV_TREND_CARDS = [TOTAL_CASES_KEY, NEW_POSITIVE_KEY]
-VAX_DOSES = [VAX_FIRST_DOSE_KEY, VAX_SECOND_DOSE_KEY, VAX_BOOSTER_DOSE_KEY]
+import airflow
 
 LOCKDOWN_DAY = dt.datetime(2020, 3, 22)
 PHASE2_DAY = dt.datetime(2020, 5, 4)
@@ -225,10 +203,6 @@ OD_TO_PC_MAP = {
     "VEN": "Veneto",
 }
 DEFAULT_DAG_ARGS = {
-    "owner": "COVIDash",
     "depends_on_past": False,
-    "start_date": dt.datetime.combine(dt.datetime.now(), dt.time.min),
-    "email": ["fabriziomiano@gmail.com"],
-    "email_on_failure": False,
-    "schedule_interval": "0 0 */3 * *",
+    "start_date": airflow.utils.dates.days_ago(1),
 }

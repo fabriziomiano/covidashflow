@@ -289,3 +289,17 @@ VARS[VAX_BOOSTER_DOSE_KEY] = {
     "stable": TREND_SYMBOL_LOGIC["stable"],
     "type": "vax",
 }
+CUM_QUANTITIES = [q for q in VARS if VARS[q]["type"] == "cum"]
+NON_CUM_QUANTITIES = [q for q in VARS if VARS[q]["type"] == "current"]
+DAILY_QUANTITIES = [
+    quantity
+    for quantity in VARS
+    if VARS[quantity]["type"] == "daily" and quantity.endswith("_ma")
+]
+TREND_CARDS = [
+    quantity
+    for quantity in VARS
+    if not quantity.endswith("_ma") and VARS[quantity]["type"] != "vax"
+]
+PROV_TREND_CARDS = [TOTAL_CASES_KEY, NEW_POSITIVE_KEY]
+VAX_DOSES = [VAX_FIRST_DOSE_KEY, VAX_SECOND_DOSE_KEY, VAX_BOOSTER_DOSE_KEY]
