@@ -1,0 +1,33 @@
+# python compiled
+*.pyc
+__pycache__/
+
+# ide stuff
+.idea
+.vscode
+
+# images
+*.png
+
+# notebooks
+*.ipynb
+
+# git / github stuff
+.git/
+.github/
+.gitignore
+.gitattributes
+
+# *.md
+LICENSE
+docs/
+previews/
+
+# misc
+scripts/
+*.log
+*.json
+*.bat
+
+# env
+.venv/

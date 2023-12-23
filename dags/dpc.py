@@ -30,7 +30,7 @@ from settings.constants import DEFAULT_DAG_ARGS
 from settings.urls import URL_NATIONAL, URL_PROVINCIAL, URL_REGIONAL
 from utils.misc import get_logger
 
-from dags.etl.dpc.settings import DAG_ID, SCHEDULE_INTERVAL
+from etl.dpc.settings import DAG_ID, SCHEDULE_INTERVAL
 
 logger = get_logger("DPC-DAG")
 

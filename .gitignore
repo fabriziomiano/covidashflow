@@ -10,8 +10,6 @@ __pycache__
 *.pyc
 __pycache__/
 
-# Ignore local settings files
-.env
 
 # Ignore log files
 logs/
@@ -30,8 +28,6 @@ dags/__pycache__/
 webserver_config.py
 standalone_admin_password.txt
 
-# Ignore virtual environment directories
+# Ignore env stuff
 .venv/*
-
-# ignore .env.* files
-.env*
+.env
