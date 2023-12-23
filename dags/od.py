@@ -2,6 +2,7 @@ import pandas as pd
 from airflow.decorators import dag, task
 from etl.od.collections import pop_coll, vax_admins_coll, vax_admins_summary_coll
 from etl.od.preprocess import preprocess_vax_admins_df, preprocess_vax_admins_summary_df
+from etl.od.settings import DAG_ID, SCHEDULE_INTERVAL
 from settings.constants import DEFAULT_DAG_ARGS
 from settings.urls import (
     URL_VAX_ADMINS_DATA,
@@ -12,8 +13,6 @@ from settings.vars import VAX_DATE_KEY
 from utils.misc import get_logger
 
 logger = get_logger("OD-DAG")
-DAG_ID = "italia-covid19-opendata-etl"
-SCHEDULE_INTERVAL = "@weekly"
 
 
 @dag(
