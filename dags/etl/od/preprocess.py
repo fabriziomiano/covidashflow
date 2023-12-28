@@ -14,11 +14,17 @@ from settings.vars import (
     POP_KEY,
     VAX_AGE_KEY,
     VAX_AREA_KEY,
+    VAX_BOOSTER1_DOSE_KEY,
+    VAX_BOOSTER2_DOSE_KEY,
+    VAX_BOOSTER3_DOSE_KEY,
     VAX_DATE_FMT,
     VAX_DATE_KEY,
+    VAX_FIRST_DOSE_KEY,
     VAX_PROVIDER_KEY,
+    VAX_SECOND_DOSE_KEY,
+    VAX_TOT_ADMINS_KEY,
 )
-from utils.misc import get_logger
+from utils.common import get_logger
 
 logger = get_logger(__name__)
 
@@ -75,7 +81,18 @@ def preprocess_vax_admins_df(df):
                 OD_REGION_CODE,
             ]
         )
-        .sum()
+        .sum(
+            [
+                F_SEX_KEY,
+                M_SEX_KEY,
+                VAX_FIRST_DOSE_KEY,
+                VAX_SECOND_DOSE_KEY,
+                VAX_BOOSTER1_DOSE_KEY,
+                VAX_BOOSTER2_DOSE_KEY,
+                VAX_BOOSTER3_DOSE_KEY,
+                VAX_TOT_ADMINS_KEY,
+            ]
+        )
         .reset_index()
     )
     df["totale"] = df[M_SEX_KEY] + df[F_SEX_KEY]

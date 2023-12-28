@@ -21,7 +21,7 @@ from settings.vars import (
     TREND_CARDS,
     VARS,
 )
-from utils.misc import get_logger
+from utils.common import get_logger
 
 pd.options.mode.chained_assignment = None
 COLUMNS_TO_DROP = [STATE_KEY]

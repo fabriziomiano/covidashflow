@@ -2,8 +2,8 @@
 OD Collections
 """
 from airflow.models import Variable
+from utils.common import get_logger
 from utils.db import mongo_hook
-from utils.misc import get_logger
 
 logger = get_logger("od-collections")
 

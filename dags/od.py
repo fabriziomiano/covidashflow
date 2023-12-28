@@ -1,6 +1,7 @@
-import pandas as pd
 from airflow.decorators import dag, task
 from etl.od.collections import pop_coll, vax_admins_coll, vax_admins_summary_coll
+from etl.od.extract import get_od_df
+from etl.od.load import load_preprocessed_od_df_to_mongo
 from etl.od.preprocess import preprocess_vax_admins_df, preprocess_vax_admins_summary_df
 from etl.od.settings import DAG_ID, SCHEDULE_INTERVAL
 from settings.constants import DEFAULT_DAG_ARGS
@@ -9,8 +10,7 @@ from settings.urls import (
     URL_VAX_ADMINS_SUMMARY_DATA,
     URL_VAX_POP_DATA,
 )
-from settings.vars import VAX_DATE_KEY
-from utils.misc import get_logger
+from utils.common import get_logger
 
 logger = get_logger("OD-DAG")
 
@@ -24,16 +24,20 @@ logger = get_logger("OD-DAG")
 )
 def od_etl():
     """
-    Italy Open-Data vaccination ETL procedure
+    Italy Open-Data vaccination ETL procedure.
+    This DAG extracts the vaccine data from Italia Open Data
+    [repository](https://github.com/italia/covid19-opendata-vaccini/).
+
+    It creates the following collections:
+      - Vax (daily vax update per area and provider)
+      - VaxSummary (latest summary)
+      - Population (per-region population breakdown)
     """
 
     @task()
     def extract_vax_data():
         logger.info(f"Extracting vax data at {URL_VAX_ADMINS_DATA}")
-        df = pd.read_csv(
-            URL_VAX_ADMINS_DATA, parse_dates=[VAX_DATE_KEY], low_memory=False
-        )
-        logger.info(f"Extracted {len(df.index)} records")
+        df = get_od_df(url=URL_VAX_ADMINS_DATA, do_parse_dates=True, low_memory=False)
         return df
 
     @task()
@@ -45,16 +49,17 @@ def od_etl():
 
     @task()
     def load_vax_data(preprocessed_vax_df):
-        logger.info(f"Loading vax OD data to {vax_admins_coll}")
-        records = preprocessed_vax_df.to_dict(orient="records")
-        vax_admins_coll.drop()
-        result_many = vax_admins_coll.insert_many(records, ordered=True)
-        logger.info(f"Landed {len(result_many.inserted_ids)} records")
+        load_preprocessed_od_df_to_mongo(
+            df=preprocessed_vax_df,
+            collection=vax_admins_coll,
+            data_type="OD vax data",
+            ordered=True,
+        )
 
     @task()
     def extract_vax_summary_data():
         logger.info(f"Extracting vax OD summary at {URL_VAX_ADMINS_SUMMARY_DATA}")
-        df = pd.read_csv(URL_VAX_ADMINS_SUMMARY_DATA, parse_dates=[VAX_DATE_KEY])
+        df = get_od_df(url=URL_VAX_ADMINS_SUMMARY_DATA, do_parse_dates=True)
         logger.info(f"Extracted {len(df.index)} records")
         return df
 
@@ -67,23 +72,19 @@ def od_etl():
 
     @task()
     def load_vax_summary_data(preprocessed_vax_admins_summary):
-        logger.info(f"Loading vax OD data to {vax_admins_summary_coll}")
-        records = preprocessed_vax_admins_summary.to_dict(orient="records")
-        logger.info("Creating vax admins summary collection")
-        vax_admins_summary_coll.drop()
-        result_many = vax_admins_summary_coll.insert_many(records, ordered=True)
-        logger.info(f"Landed {len(result_many.inserted_ids)} records")
+        load_preprocessed_od_df_to_mongo(
+            df=preprocessed_vax_admins_summary,
+            collection=vax_admins_summary_coll,
+            data_type="OD vax summary data",
+            ordered=True,
+        )
 
     @task()
     def copy_pop_data():
-        logger.info(f"Extracting population data at {URL_VAX_POP_DATA}")
-        df = pd.read_csv(URL_VAX_POP_DATA)
-        logger.info(f"Read {len(df.index)} records")
-        records = df.to_dict(orient="records")
-        logger.info("Creating population collection")
-        pop_coll.drop()
-        result_many = pop_coll.insert_many(records)
-        logger.info(f"Inserted {result_many.inserted_ids} records")
+        df = get_od_df(url=URL_VAX_POP_DATA)
+        load_preprocessed_od_df_to_mongo(
+            df=df, collection=pop_coll, data_type="OD Population data"
+        )
 
     copy_pop_data()
 

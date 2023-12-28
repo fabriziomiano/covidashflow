@@ -49,7 +49,9 @@ VAX_ADMINS_PERC_KEY = "percentuale_somministrazione"
 VAX_TOT_ADMINS_KEY = "totale"
 VAX_FIRST_DOSE_KEY = "d1"
 VAX_SECOND_DOSE_KEY = "d2"
-VAX_BOOSTER_DOSE_KEY = "db1"
+VAX_BOOSTER1_DOSE_KEY = "db1"
+VAX_BOOSTER2_DOSE_KEY = "db2"
+VAX_BOOSTER3_DOSE_KEY = "db3"
 VAX_PROVIDER_KEY = "forn"
 F_SEX_KEY = "f"
 M_SEX_KEY = "m"
@@ -281,7 +283,7 @@ VARS[VAX_SECOND_DOSE_KEY] = {
     "stable": TREND_SYMBOL_LOGIC["stable"],
     "type": "vax",
 }
-VARS[VAX_BOOSTER_DOSE_KEY] = {
+VARS[VAX_BOOSTER1_DOSE_KEY] = {
     "title": ("Booster dose"),
     "icon": "fas fa-plug",
     "increase": TREND_SYMBOL_LOGIC["increase_inverted"],
@@ -302,4 +304,3 @@ TREND_CARDS = [
     if not quantity.endswith("_ma") and VARS[quantity]["type"] != "vax"
 ]
 PROV_TREND_CARDS = [TOTAL_CASES_KEY, NEW_POSITIVE_KEY]
-VAX_DOSES = [VAX_FIRST_DOSE_KEY, VAX_SECOND_DOSE_KEY, VAX_BOOSTER_DOSE_KEY]
