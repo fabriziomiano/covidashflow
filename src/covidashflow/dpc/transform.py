@@ -1,5 +1,7 @@
 """Transform PCM-DPC COVID-19 dataframes into API-ready Mongo documents."""
 
+from __future__ import annotations
+
 import pandas as pd
 from covidashflow.common.geo import PROVINCES, REGIONS
 from covidashflow.common.vars import (

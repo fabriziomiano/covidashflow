@@ -18,12 +18,18 @@ from covidashflow.common.vars import (
     TOTAL_SWABS_KEY,
 )
 from covidashflow.dpc.transform import (
+    _sort_and_dedupe,
     build_national_series,
     build_national_trends,
     build_regional_breakdown,
     preprocess_national_df,
     preprocess_regional_df,
 )
+
+
+def test_transform_annotations_are_safe_for_python38_airflow_imports():
+    """DAG imports on Python 3.8 should not evaluate PEP 585 annotations eagerly."""
+    assert _sort_and_dedupe.__annotations__["subset"] == "list[str]"
 
 
 def national_frame(days: int = 9) -> pd.DataFrame:
