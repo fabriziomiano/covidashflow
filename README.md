@@ -1,21 +1,64 @@
 # COVIDashFlow
 
-[![Made with Pthon](https://img.shields.io/badge/Made%20with-Python-1f425f.svg)](https://www.python.org/)
+Rewritten Airflow ETL project for the COVIDash.it data backend.
 
-A simple Apache Airflow project which works as the ETL of [COVIDash.it](https://www.covidash.it/)
+The rewrite keeps the original pipelines and MongoDB collection contracts:
 
-## For developers
-To see it in action have a MongoDB instance ready and populate the `.env` file with the appropriate value. Then 
+- PCM-DPC national, regional, and provincial raw data
+- PCM-DPC trend cards
+- PCM-DPC chart series
+- PCM-DPC regional and provincial breakdowns
+- Italia Open Data vaccination administrations
+- Italia Open Data vaccination summaries
+- Italia Open Data population data
+
+## What changed
+
+The original project mixed Airflow, MongoDB lookups, extraction, transformation, and loading at module import time. This version keeps the same ETL logic but packages it under `src/covidashflow` so transformations can be tested without an Airflow runtime.
+
+Airflow DAG files in `dags/` are now thin wrappers around package functions.
+
+## Run locally
+
+Create an environment file:
+
 ```shell
-docker-compose --env-file ./.env up
+cp .env.example .env
 ```
-The Airflow Web UI will be listening at `http://0.0.0.0:8080`
-It can be stopped with 
+
+The default `.env.example` starts a local MongoDB container and points Airflow to
+the `covidash` database. To use an external MongoDB instance, change
+`AIRFLOW_CONN_MONGO_DEFAULT`.
+
+Run the stack:
+
 ```shell
-docker-compose down
+docker compose --env-file .env up --build
 ```
 
-## Donation
-If you liked this project or if I saved you some time, feel free to buy me a beer. Cheers!
+The Airflow UI listens on `http://0.0.0.0:8080`.
+The local login is `airflow` / `airflow`.
 
-[![paypal](https://www.paypalobjects.com/en_US/IT/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=PMW6C23XTQDWG)
+If another Airflow instance already uses port `8080`, set `AIRFLOW_WEBSERVER_PORT=8081`
+in `.env` before starting the stack.
+
+Stop the stack with:
+
+```shell
+docker compose --env-file .env down
+```
+
+## Test
+
+```shell
+python -m venv .venv
+. .venv/bin/activate
+pip install -e ".[dev]"
+pytest
+```
+
+You can also validate the Dockerized Airflow DAG parse:
+
+```shell
+docker compose --env-file .env run --rm airflow-cli dags list --subdir /opt/airflow/dags
+```

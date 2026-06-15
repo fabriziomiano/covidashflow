@@ -1,33 +1,7 @@
-# python compiled
-*.pyc
-__pycache__
-
-# ide stuff
-.idea
-.vscode
-
-# Ignore compiled Python files
-*.pyc
 __pycache__/
-
-
-# Ignore log files
-logs/
-
-# log files
-*.log
-
-# Ignore Airflow database and metadata
-airflow.*
-airflow-webserver.pid
-airflow-scheduler.pid
-logs/
-dags/__pycache__/
-*.err
-*.out
-webserver_config.py
-standalone_admin_password.txt
-
-# Ignore env stuff
-.venv/*
+.pytest_cache/
+.ruff_cache/
 .env
+.vscode/
+logs/*
+!.gitkeep
