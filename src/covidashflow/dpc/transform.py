@@ -17,6 +17,9 @@ from covidashflow.common.vars import (
     REGION_KEY,
     STATE_KEY,
     TOTAL_CASES_KEY,
+    TOTAL_DEATHS_KEY,
+    TOTAL_HEALED_KEY,
+    TOTAL_SWABS_KEY,
     TREND_CARDS,
     VARS,
 )
@@ -29,6 +32,12 @@ MOVING_AVERAGE_SOURCE_COLUMNS = [
 ]
 REGION_SET = set(REGIONS)
 PROVINCE_SET = set(PROVINCES)
+CUMULATIVE_DELTA_COLUMNS = {
+    TOTAL_CASES_KEY,
+    TOTAL_DEATHS_KEY,
+    TOTAL_HEALED_KEY,
+    TOTAL_SWABS_KEY,
+}
 
 
 logger = get_logger(__name__)
@@ -37,7 +46,10 @@ logger = get_logger(__name__)
 def add_delta(df: pd.DataFrame) -> pd.DataFrame:
     """Add daily delta columns for cumulative and current DPC quantities."""
     for col in _available_columns(df, DELTA_SOURCE_COLUMNS):
-        df[f"{col}_g"] = df[col].diff()
+        if col in CUMULATIVE_DELTA_COLUMNS:
+            df[f"{col}_g"] = _safe_cumulative_diff(df[col])
+        else:
+            df[f"{col}_g"] = df[col].diff()
     return df
 
 
@@ -72,7 +84,8 @@ def clean_df(df: pd.DataFrame) -> pd.DataFrame:
 
 def preprocess_national_df(df: pd.DataFrame) -> pd.DataFrame:
     """Preprocess national DPC records with deltas, averages, percentages, and positivity."""
-    df = add_delta(df.copy())
+    df = _sort_and_dedupe(df.copy(), [DATE_KEY])
+    df = add_delta(df)
     df = add_moving_avg(df)
     df = add_percentages(df)
     df = add_positivity_idx(df)
@@ -81,6 +94,7 @@ def preprocess_national_df(df: pd.DataFrame) -> pd.DataFrame:
 
 def preprocess_regional_df(df: pd.DataFrame) -> pd.DataFrame:
     """Preprocess regional DPC records independently per region code."""
+    df = _sort_and_dedupe(df, [REGION_CODE, DATE_KEY])
     regional_frames = []
     for _, df_region in df.groupby(REGION_CODE, sort=False):
         df_region = df_region.copy()
@@ -95,6 +109,7 @@ def preprocess_regional_df(df: pd.DataFrame) -> pd.DataFrame:
 def preprocess_provincial_df(df: pd.DataFrame) -> pd.DataFrame:
     """Preprocess provincial DPC records independently per province code."""
     df = df.rename(columns=lambda x: x.strip())
+    df = _sort_and_dedupe(df, [PROVINCE_CODE, DATE_KEY])
     provincial_frames = []
     for _, province_df in df.groupby(PROVINCE_CODE, sort=False):
         province_df = province_df.copy()
@@ -311,6 +326,36 @@ def _available_columns(df: pd.DataFrame, columns) -> list:
 def _latest_by_group(df: pd.DataFrame, group_column: str) -> pd.DataFrame:
     """Return the last observed row for each group, preserving source order."""
     return df.groupby(group_column, sort=False).tail(1)
+
+
+def _safe_cumulative_diff(series: pd.Series) -> pd.Series:
+    """Diff cumulative data while ignoring temporary backwards corrections."""
+
+    deltas = []
+    last_valid = None
+    for value in series:
+        if pd.isna(value):
+            deltas.append(0)
+            continue
+        if last_valid is None:
+            deltas.append(0)
+            last_valid = value
+            continue
+        if value < last_valid:
+            deltas.append(0)
+            continue
+        deltas.append(value - last_valid)
+        last_valid = value
+    return pd.Series(deltas, index=series.index)
+
+
+def _sort_and_dedupe(df: pd.DataFrame, subset: list[str]) -> pd.DataFrame:
+    """Sort rows chronologically and keep one source record per date/group."""
+
+    sort_columns = [col for col in subset if col in df.columns]
+    if DATE_KEY in df.columns and DATE_KEY not in sort_columns:
+        sort_columns.append(DATE_KEY)
+    return df.sort_values(sort_columns).drop_duplicates(subset=subset, keep="last").reset_index(drop=True)
 
 
 def _trend_status(count: int, last_week_count: int) -> str:

@@ -61,6 +61,21 @@ def test_national_preprocess_adds_derived_columns_and_series():
     assert series["daily"][0]["data"]
 
 
+def test_national_preprocess_dedupes_dates_and_ignores_cumulative_backtracks():
+    """Temporary cumulative source corrections should not create daily spikes."""
+    df = national_frame(days=10)
+    df.loc[8, TOTAL_SWABS_KEY] = 900
+    df.loc[9, TOTAL_SWABS_KEY] = 1900
+    duplicated = pd.concat([df, df.tail(1)], ignore_index=True)
+
+    transformed = preprocess_national_df(duplicated)
+
+    assert len(transformed) == len(df)
+    assert transformed[DATE_KEY].is_unique
+    assert transformed["tamponi_g"].iloc[8] == 0
+    assert transformed["tamponi_g"].iloc[9] == 200
+
+
 def test_national_trends_match_card_shape():
     """Trend documents should keep the frontend card contract."""
     df = preprocess_national_df(national_frame())
